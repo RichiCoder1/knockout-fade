@@ -1,11 +1,11 @@
 var webpack = require("webpack");
-var version = "0.6.0";
+var version = "0.1.0";
 
 module.exports = {
-    entry: "./src/knockout.punches.ts",
+    entry: "./src/knockout-fade.ts",
     output: {
         path: __dirname + "/dist",
-        filename: "knockout.punches.js",
+        filename: "knockout-fade.min.js",
         libraryTarget: "umd"
     },
     resolve: {
@@ -21,7 +21,7 @@ module.exports = {
     plugins: [
        new webpack.optimize.UglifyJsPlugin(),
        new webpack.BannerPlugin(`
-@license Knockout.Punches
+@license Knockout Fade
 Enhanced binding syntaxes for Knockout
 (c) Richard Simpson 2016, Michael Best 2013-2016
 License: MIT (http://www.opensource.org/licenses/mit-license.php)

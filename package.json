@@ -1,6 +1,6 @@
 {
-  "name": "knockout-punches",
-  "version": "0.6.0",
+  "name": "knockout-fade",
+  "version": "0.1.0",
   "description": "A set of enchanced binding syntaxes for working with knockout",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/RichiCoder1/knockout.punches.git"
+    "url": "git+https://github.com/RichiCoder1/knockout-fade.git"
   },
   "keywords": [
     "knockout",
@@ -16,12 +16,12 @@
     "binding",
     "enhanched"
   ],
-  "author": "mbest; richicoder",
+  "author": "richicoder; mbest",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/RichiCoder1/knockout.punches/issues"
+    "url": "https://github.com/RichiCoder1/knockout-fade/issues"
   },
-  "homepage": "https://github.com/RichiCoder1/knockout.punches#readme",
+  "homepage": "https://github.com/RichiCoder1/knockout-fade#readme",
   "dependencies": {},
   "devDependencies": {
     "jasmine-core": "^2.4.1",

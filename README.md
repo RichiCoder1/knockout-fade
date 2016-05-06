@@ -1,4 +1,4 @@
-## Knockout.Punches
+## Knockout Fade
 
 This plugin provides a set of enhanced binding syntaxes allowing for:
 
@@ -8,10 +8,12 @@ This plugin provides a set of enhanced binding syntaxes allowing for:
 4. Wrapped event callbacks
 5. Expression-based event handling
 
-### Documentation
+A spiritual successor to Knockout.Punches and insipired by Aurelia.
 
-* [http://mbest.github.io/knockout.punches/](http://mbest.github.io/knockout.punches/)
+### Documenation
 
-### License and Contact
+*TODO*
+
+### License 
 
 **License:** MIT (http://www.opensource.org/licenses/mit-license.php)
