@@ -18,7 +18,7 @@ namespace _utils {
     }
     
     // Add a preprocess function
-    export function chainPreprocessor(object: any, prop: string, fn: koPreprocess) {
+    export function chainPreprocessor<T>(object: T, prop: string, fn: koPreprocess) {
         if (object[prop]) {
             // If the handler already has a preprocess function, chain the new
             // one after the existing one. If the previous function in the chain

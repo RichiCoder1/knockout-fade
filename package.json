@@ -4,7 +4,7 @@
   "description": "A set of enchanced binding syntaxes for working with knockout",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/karma start --single-run --browsers PhantomJS"
   },
   "repository": {
     "type": "git",
@@ -31,6 +31,7 @@
     "karma-jasmine": "^1.0.2",
     "karma-phantomjs-launcher": "^1.0.0",
     "knockout": "^3.4.0",
+    "phantomjs-prebuilt": "^2.1.7",
     "ts-loader": "^0.8.2",
     "typescript": "^1.8.10",
     "webpack": "^1.13.0"
