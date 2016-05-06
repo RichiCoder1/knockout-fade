@@ -1,4 +1,4 @@
-## Knockout Fade
+## Knockout Fade [![Build Status](https://travis-ci.org/RichiCoder1/knockout-fade.svg?branch=master)](https://travis-ci.org/RichiCoder1/knockout-fade)
 
 This plugin provides a set of enhanced binding syntaxes allowing for:
 
