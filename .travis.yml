@@ -2,5 +2,8 @@ language: node_js
 node_js:
   - "5.1"
 before_script:
-  - npm install -g webpack
-script: webpack
+  - npm install -g webpack typings
+  - typings install
+script: 
+  - webpack
+  - npm test

@@ -25,7 +25,8 @@ module.exports = {
 Enhanced binding syntaxes for Knockout
 (c) Richard Simpson 2016, Michael Best 2013-2016
 License: MIT (http://www.opensource.org/licenses/mit-license.php)
-Version ${package.version}`)
+Version ${package.version}`),
+        require('webpack-fail-plugin')
     ],
     externals: {
         "knockout": {
