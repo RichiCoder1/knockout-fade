@@ -1,4 +1,6 @@
 describe("Interpolation Markup preprocessor", function() {
+    beforeEach(installMatchers);
+    
     it('Should do nothing when there are no expressions', function() {
         var result = ko.punches.interpolationMarkup.preprocessor(document.createTextNode("some text"));
         expect(result).toBeUndefined();
@@ -137,39 +139,46 @@ describe("Interpolation Markup preprocessor", function() {
 });
 
 describe("Interpolation Markup bindings", function() {
-    beforeEach(jasmine.prepareTestNode);
+    beforeEach(function() {
+        prepareTestNode();
+        installMatchers();
+    });
 
     var savePreprocessNode = ko.bindingProvider.instance.preprocessNode;
+    var originalWrapExpresssion = ko.punches.interpolationMarkup.wrapExpression;
     beforeEach(ko.punches.interpolationMarkup.enable);
-    afterEach(function() { ko.bindingProvider.instance.preprocessNode = savePreprocessNode; });
+    afterEach(function() { 
+        ko.bindingProvider.instance.preprocessNode = savePreprocessNode; 
+        ko.punches.interpolationMarkup.wrapExpression = originalWrapExpresssion;
+    });
 
     it('Should replace {{...}} expression with virtual text binding', function() {
-        jasmine.setNodeText(testNode, "hello {{'name'}}!");
+        setNodeText(testNode, "hello {{'name'}}!");
         ko.applyBindings(null, testNode);
         expect(testNode).toContainText("hello name!");
         expect(testNode).toContainHtml("hello <!--ko text:'name'-->name<!--/ko-->!");
     });
 
     it('Should replace multiple expressions', function() {
-        jasmine.setNodeText(testNode, "hello {{'name'}}{{'!'}}");
+        setNodeText(testNode, "hello {{'name'}}{{'!'}}");
         ko.applyBindings(null, testNode);
         expect(testNode).toContainText("hello name!");
     });
 
     it('Should support any content of expression, including functions and {{}}', function() {
-        jasmine.setNodeText(testNode, "hello {{ (function(){return '{{name}}'}()) }}!");
+        setNodeText(testNode, "hello {{ (function(){return '{{name}}'}()) }}!");
         ko.applyBindings(null, testNode);
         expect(testNode).toContainText("hello {{name}}!");
     });
 
     it('Should ignore unmatched }} and {{', function() {
-        jasmine.setNodeText(testNode, "hello }}'name'{{'!'}}{{");
+        setNodeText(testNode, "hello }}'name'{{'!'}}{{");
         ko.applyBindings(null, testNode);
         expect(testNode).toContainText("hello }}'name'!{{");
     });
 
     it('Should update when observable changes', function() {
-        jasmine.setNodeText(testNode, "The best {{what}}.");
+        setNodeText(testNode, "The best {{what}}.");
         var observable = ko.observable('time');
         ko.applyBindings({what: observable}, testNode);
         expect(testNode).toContainText("The best time.");
@@ -178,16 +187,11 @@ describe("Interpolation Markup bindings", function() {
     });
 
     it('Should be able to override wrapExpression to define a different set of elements', function() {
-        var originalWrapExpresssion = ko.punches.interpolationMarkup.wrapExpression;
-        this.after(function() {
-            ko.punches.interpolationMarkup.wrapExpression = originalWrapExpresssion;
-        });
-
         ko.punches.interpolationMarkup.wrapExpression = function(expressionText, node) {
             return originalWrapExpresssion('"--" + ' + expressionText + ' + "--"', node);
         }
 
-        jasmine.setNodeText(testNode, "hello {{'name'}}!");
+        setNodeText(testNode, "hello {{'name'}}!");
         ko.applyBindings(null, testNode);
         expect(testNode).toContainText("hello --name--!");
     });
@@ -218,7 +222,7 @@ describe("Interpolation Markup bindings", function() {
 
     describe("Using unescaped HTML syntax", function() {
         it('Should replace {{{...}}} expression with virtual html binding', function() {
-            jasmine.setNodeText(testNode, "hello {{{'<b>name</b>'}}}!");
+            setNodeText(testNode, "hello {{{'<b>name</b>'}}}!");
             ko.applyBindings(null, testNode);
             expect(testNode).toContainText("hello name!");
             expect(testNode).toContainHtml("hello <!--ko html:'<b>name</b>'--><b>name</b><!--/ko-->!");
@@ -226,7 +230,7 @@ describe("Interpolation Markup bindings", function() {
         });
 
         it('Should support mix of escaped and unescape expressions', function() {
-            jasmine.setNodeText(testNode, "hello {{{'<b>name</b>'}}}{{'!'}}");
+            setNodeText(testNode, "hello {{{'<b>name</b>'}}}{{'!'}}");
             ko.applyBindings(null, testNode);
             expect(testNode).toContainText("hello name!");
             expect(testNode).toContainHtml("hello <!--ko html:'<b>name</b>'--><b>name</b><!--/ko--><!--ko text:'!'-->!<!--/ko-->");
@@ -234,20 +238,20 @@ describe("Interpolation Markup bindings", function() {
         });
 
         it('Should support any content of expression, including functions and {{{}}}', function() {
-            jasmine.setNodeText(testNode, "hello {{{ (function(){return '<b>{{{name}}}</b>'}()) }}}!");
+            setNodeText(testNode, "hello {{{ (function(){return '<b>{{{name}}}</b>'}()) }}}!");
             ko.applyBindings(null, testNode);
             expect(testNode).toContainText("hello {{{name}}}!");
             expect(testNode.childNodes[2].nodeName.toLowerCase()).toEqual('b');
         });
 
         it('Should ignore unmatched }}} and {{{', function() {
-            jasmine.setNodeText(testNode, "hello }}}'name'{{{'!'}}}{{{");
+            setNodeText(testNode, "hello }}}'name'{{{'!'}}}{{{");
             ko.applyBindings(null, testNode);
             expect(testNode).toContainText("hello }}}'name'!{{{");
         });
 
         it('Should update when observable changes', function() {
-            jasmine.setNodeText(testNode, "The best {{{what}}}.");
+            setNodeText(testNode, "The best {{{what}}}.");
             var observable = ko.observable('<b>time</b>');
             ko.applyBindings({what: observable}, testNode);
             expect(testNode).toContainText("The best time.");
@@ -296,7 +300,7 @@ describe("Interpolation Markup bindings", function() {
         });
 
         it('Should support self-closing blocks', function() {
-            jasmine.setNodeText(testNode, "hello {{#text 'name'/}}");
+            setNodeText(testNode, "hello {{#text 'name'/}}");
             ko.applyBindings(null, testNode);
             expect(testNode).toContainText("hello name");
         });
@@ -305,8 +309,12 @@ describe("Interpolation Markup bindings", function() {
 
 describe("Attribute Interpolation Markup preprocessor", function() {
     var testNode;
+    var originalAttributeBinding = ko.punches.attributeInterpolationMarkup.attributeBinding;
     beforeEach(function () {
         testNode = document.createElement("div");
+    });
+    afterEach(function () {
+        ko.punches.attributeInterpolationMarkup.attributeBinding = originalAttributeBinding;
     });
 
     it('Should do nothing when there are no expressions', function() {
@@ -412,11 +420,6 @@ describe("Attribute Interpolation Markup preprocessor", function() {
     });
 
     it('Should support custom attribute binding using "attributeBinding" extension point', function() {
-        var originalAttributeBinding = ko.punches.attributeInterpolationMarkup.attributeBinding;
-        this.after(function() {
-            ko.punches.attributeInterpolationMarkup.attributeBinding = originalAttributeBinding;
-        });
-
         ko.punches.attributeInterpolationMarkup.attributeBinding = function(name, value, node) {
             var parsedName = name.match(/^ko-(.*)$/);
             if (parsedName) {
@@ -435,7 +438,10 @@ describe("Attribute Interpolation Markup preprocessor", function() {
 });
 
 describe("Attribute Interpolation Markup bindings", function() {
-    beforeEach(jasmine.prepareTestNode);
+    beforeEach(function() {
+        prepareTestNode();
+        installMatchers();
+    });
 
     var savePreprocessNode = ko.bindingProvider.instance.preprocessNode;
     beforeEach(ko.punches.attributeInterpolationMarkup.enable);

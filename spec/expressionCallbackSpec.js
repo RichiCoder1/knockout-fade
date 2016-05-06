@@ -1,5 +1,5 @@
 describe("Expression callback bindings", function() {
-    beforeEach(jasmine.prepareTestNode);
+    beforeEach(prepareTestNode);
 
     it('Should call given expression when using \'on\' namespace', function() {
         var model = {

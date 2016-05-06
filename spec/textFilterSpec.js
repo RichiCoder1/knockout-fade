@@ -103,8 +103,11 @@ describe("Text filters preprocessor", function() {
 });
 
 describe("Text filter bindings", function() {
-    beforeEach(jasmine.prepareTestNode);
-    beforeEach(function() { ko.punches.textFilter.enableForBinding('text'); });
+    beforeEach(function() {
+        prepareTestNode();
+        installMatchers();
+        ko.punches.textFilter.enableForBinding('text');
+    });
     afterEach(function() { ko.bindingHandlers.text.preprocess = null; });
 
     it('Should convert input into appropriate output', function() {

@@ -1,5 +1,8 @@
 describe('Namespaced dynamic bindings', function() {
-    beforeEach(jasmine.prepareTestNode);
+    beforeEach(function() {
+        prepareTestNode();
+        installMatchers();
+    });
 
     it('Should be able to set and use binding handlers with x.y syntax', function() {
         try {
@@ -224,7 +227,7 @@ describe('Auto namespaced preprocessor', function() {
 });
 
 describe('Auto namespaced bindings', function() {
-    beforeEach(jasmine.prepareTestNode);
+    beforeEach(prepareTestNode);
 
     it('Should create and call dynamic binding handler for each sub-value in binding', function() {
         try {
@@ -256,30 +259,30 @@ describe('Auto namespaced bindings', function() {
 });
 
 describe('Default namespaced binding preprocessor', function() {
-    beforeEach(jasmine.prepareTestNode);
+    beforeEach(prepareTestNode);
 
-    it('Should run preprocessor for dynamically created binding', function() {
-        this.after(function() {
+    it('Should run preprocessor for dynamically created binding', function() {        
+        try {
+            var value;
+            ko.bindingHandlers['a'] = {
+                getNamespacedHandler: function(subKey) {
+                    return {
+                        init: function(element, valueAccessor) {
+                            value = valueAccessor();
+                        }
+                    };
+                }
+            };
+            ko.punches.namespacedBinding.addDefaultBindingPreprocessor('a', function() {
+                return '"new value"';
+            });
+            testNode.innerHTML = "<div data-bind='a.b: \"old value\"'></div>";
+            ko.applyBindings(null, testNode);
+            expect(value).toEqual('new value');
+        } finally {
             delete ko.bindingHandlers['a'];
             delete ko.bindingHandlers['a.b'];
             delete ko.bindingHandlers['a.c'];
-        });
-
-        var value;
-        ko.bindingHandlers['a'] = {
-            getNamespacedHandler: function(subKey) {
-                return {
-                    init: function(element, valueAccessor) {
-                        value = valueAccessor();
-                    }
-                };
-            }
-        };
-        ko.punches.namespacedBinding.addDefaultBindingPreprocessor('a', function() {
-            return '"new value"';
-        });
-        testNode.innerHTML = "<div data-bind='a.b: \"old value\"'></div>";
-        ko.applyBindings(null, testNode);
-        expect(value).toEqual('new value');
+        }
     });
 });

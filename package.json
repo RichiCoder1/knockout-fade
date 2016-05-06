@@ -1,0 +1,38 @@
+{
+  "name": "knockout-punches",
+  "version": "0.6.0",
+  "description": "A set of enchanced binding syntaxes for working with knockout",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RichiCoder1/knockout.punches.git"
+  },
+  "keywords": [
+    "knockout",
+    "punches",
+    "binding",
+    "enhanched"
+  ],
+  "author": "mbest; richicoder",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RichiCoder1/knockout.punches/issues"
+  },
+  "homepage": "https://github.com/RichiCoder1/knockout.punches#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-firefox-launcher": "^1.0.0",
+    "karma-jasmine": "^1.0.2",
+    "karma-phantomjs-launcher": "^1.0.0",
+    "knockout": "^3.4.0",
+    "ts-loader": "^0.8.2",
+    "typescript": "^1.8.10",
+    "webpack": "^1.13.0"
+  }
+}

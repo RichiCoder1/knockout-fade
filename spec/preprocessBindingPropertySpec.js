@@ -1,5 +1,5 @@
 describe('Preprocess binding properties', function() {
-    beforeEach(jasmine.prepareTestNode);
+    beforeEach(prepareTestNode);
 
     it('Should preprocess the specified binding property', function() {
         try {

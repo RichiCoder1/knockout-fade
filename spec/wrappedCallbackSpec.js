@@ -30,7 +30,7 @@ describe("Wrapped callback preprocessor", function() {
 });
 
 describe("Wrapped callback bindings", function() {
-    beforeEach(jasmine.prepareTestNode);
+    beforeEach(prepareTestNode);
 
     it('Should set correct \'this\' in called function', function() {
         try {
