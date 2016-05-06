@@ -1,6 +1,6 @@
 {
   "name": "knockout-fade",
-  "version": "0.1.0",
+  "version": "0.6.0",
   "description": "A set of enchanced binding syntaxes for working with knockout",
   "main": "index.js",
   "scripts": {

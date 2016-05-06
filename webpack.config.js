@@ -1,5 +1,5 @@
 var webpack = require("webpack");
-var version = "0.1.0";
+var package = require("./package.json");
 
 module.exports = {
     entry: "./src/knockout-fade.ts",
@@ -25,7 +25,7 @@ module.exports = {
 Enhanced binding syntaxes for Knockout
 (c) Richard Simpson 2016, Michael Best 2013-2016
 License: MIT (http://www.opensource.org/licenses/mit-license.php)
-Version ${version}`)
+Version ${package.version}`)
     ],
     externals: {
         "knockout": {
