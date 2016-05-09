@@ -2,29 +2,34 @@ import * as ko from "knockout";
 import _utils from "./utils";
 
 export class _interpolationMarkup {
+    
     // Performance comparison at http://jsperf.com/markup-interpolation-comparison
-    static parseInterpolationMarkup(textToParse, outerTextCallback, expressionCallback) {
-        function innerParse(text) {
-            var innerMatch = text.match(/^([\s\S]*)}}([\s\S]*?)\{\{([\s\S]*)$/);
-            if (innerMatch) {
-                innerParse(innerMatch[1]);
-                outerTextCallback(innerMatch[2]);
-                expressionCallback(innerMatch[3]);
-            } else {
-                expressionCallback(text);
+    static parseInterpolationMarkup(textToParse: string, outerTextCallback: (text: string) => void, expressionCallback: (text: string) => void) {
+        if(textToParse == null || textToParse.length < 3) {
+            return;
+        }
+        const interpolationRegex = /}(?!\\)[\s\S]*?{\$(?!\\)/g;
+        var reversed = textToParse.split('').reverse().join('');
+        var interpolationNodes = reversed.match(interpolationRegex);
+        var textNodes = reversed.split(interpolationRegex);
+        if((interpolationNodes || { length: 0 }).length) {
+            outerTextCallback(reverse(textNodes.pop()));
+            while(textNodes.length > 0) {
+                var expressionText = reverse(interpolationNodes.pop());
+                expressionText = expressionText.substring(2, expressionText.length - 1);
+                expressionCallback(expressionText);
+                outerTextCallback(reverse(textNodes.pop()));
             }
         }
-        var outerMatch = textToParse.match(/^([\s\S]*?)\{\{([\s\S]*)}}([\s\S]*)$/);
-        if (outerMatch) {
-            outerTextCallback(outerMatch[1]);
-            innerParse(outerMatch[2]);
-            outerTextCallback(outerMatch[3]);
+
+        function reverse(val) {
+            return val == null ? null : val.split('').reverse().join('');
         }
     }
 
-    static preprocessor(node) {
+    static preprocessor(node: Node) {
         // only needs to work with text nodes
-        if (node.nodeType === 3 && node.nodeValue && node.nodeValue.indexOf('{{') !== -1 && (node.parentNode || {}).nodeName != "TEXTAREA") {
+        if (node.nodeType === 3 && node.nodeValue && node.nodeValue.indexOf('${') !== -1 && (node.parentNode || <Node>{}).nodeName != "TEXTAREA") {
             var nodes = [];
             function addTextNode(text) {
                 if (text)
@@ -50,36 +55,13 @@ export class _interpolationMarkup {
 
     static wrapExpression(expressionText: string, node: Node) {
         var ownerDocument = node ? node.ownerDocument : document,
-            closeComment = true,
             binding,
             expressionText = _utils.trim(expressionText),
-            firstChar = expressionText[0],
-            lastChar = expressionText[expressionText.length - 1],
-            result = [],
-            matches;
+            result = [];
 
-        if (firstChar === '#') {
-            if (lastChar === '/') {
-                binding = expressionText.slice(1, -1);
-            } else {
-                binding = expressionText.slice(1);
-                closeComment = false;
-            }
-            if (matches = binding.match(/^([^,"'{}()\/:[\]\s]+)\s+([^\s:].*)/)) {
-                binding = matches[1] + ':' + matches[2];
-            }
-        } else if (firstChar === '/') {
-            // replace only with a closing comment
-        } else if (firstChar === '{' && lastChar === '}') {
-            binding = "html:" + _utils.trim(expressionText.slice(1, -1));
-        } else {
-            binding = "text:" + _utils.trim(expressionText);
-        }
-
-        if (binding)
-            result.push(ownerDocument.createComment("ko " + binding));
-        if (closeComment)
-            result.push(ownerDocument.createComment("/ko"));
+        binding = "text:" + _utils.trim(expressionText);
+        result.push(ownerDocument.createComment("ko " + binding));
+        result.push(ownerDocument.createComment("/ko"));
         return result;
     };
 
@@ -115,7 +97,7 @@ export class _attributeInterpolationMarkup {
             var dataBindAttribute = node.getAttribute(_attributeInterpolationMarkup.dataBind);
             for (var attrs = ko.utils.arrayPushAll([], node.attributes), n = attrs.length, i = 0; i < n; ++i) {
                 var attr = attrs[i];
-                if (attr.specified && attr.name != _attributeInterpolationMarkup.dataBind && attr.value.indexOf('{{') !== -1) {
+                if (attr.specified && attr.name != _attributeInterpolationMarkup.dataBind && attr.value.indexOf('${') !== -1) {
                     var parts = [], attrValue = '';
                     function addText(text) {
                         if (text)
